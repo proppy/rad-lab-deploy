@@ -19,7 +19,6 @@ steps:
   env:
   - 'TF_CLI_ARGS_init=-backend-config=bucket=$PROJECT_ID-tfstate'
   - 'TF_VAR_project=$PROJECT_ID'  
-  - 'TF_LOG=info'
   entrypoint: 'sh'
   args: 
   - '-c'
@@ -33,7 +32,6 @@ steps:
   name: 'hashicorp/terraform:latest'
   env:
   - 'TF_VAR_project=$PROJECT_ID'
-  - 'TF_LOG=info'
   entrypoint: 'sh'
   args: 
   - '-c'
@@ -46,7 +44,6 @@ steps:
   name: 'hashicorp/terraform:latest'
   env:
   - 'TF_VAR_project=$PROJECT_ID'
-  - 'TF_LOG=info'
   entrypoint: 'sh'
   args: 
   - '-c'
