@@ -50,4 +50,14 @@ steps:
   - | 
       set -ex
       env
+      CLOUD_SDK_VERSION=394.0.0
+      apk --no-cache add \
+        curl \
+        python3
+      curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-394.0.0-linux-x86_64.tar.gz
+      tar -C / -xvzf google-cloud-cli-394.0.0-linux-x86_64.tar.gz
+      export PATH=$$PATH:/google-cloud-sdk/bin
+      gcloud config set core/disable_usage_reporting true
+      gcloud config set component_manager/disable_update_check true
+      gcloud --version
       terraform apply -auto-approve
