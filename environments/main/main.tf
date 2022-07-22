@@ -19,7 +19,7 @@ locals {
 
 resource "google_project" "radlab_project" {
   project_id = var.project
-  name = var.project
+  name       = var.project
   lifecycle {
     ignore_changes = all
   }
@@ -27,18 +27,15 @@ resource "google_project" "radlab_project" {
 
 module "catx_demo_radlab_deployment" {
   source = "../../rad-lab/modules/silicon_design"
-
-  billing_account_id = google_project.radlab_project.billing_account
+  name   = "${var.project}-deploy"
+  
   folder_id          = google_project.radlab_project.folder_id
-#  organization_id    = google_project.radlab_project.organization_id
-  
-  create_project  = false
-  project_name    = google_project.radlab_project.name
-  enable_services = true
+  project_name       = google_project.radlab_project.name
+  billing_account_id = google_project.radlab_project.billing_account
 
-  network_name = "${google_project.radlab_project.name}-silicon-network"
-  subnet_name = "${google_project.radlab_project.name}-silicon-subnet"
-  
+  create_project                  = false
+  create_network                  = true
+  enable_services                 = true
   set_external_ip_policy          = false
   set_shielded_vm_policy          = false
   set_trustedimage_project_policy = false
