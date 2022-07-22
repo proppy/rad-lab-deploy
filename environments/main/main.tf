@@ -17,6 +17,31 @@ locals {
   env = "main"
 }
 
-provider "google" {
-  project = "${var.project}"
+resource "google_project" "radlab_project" {
+  project_id = var.project
+  name = var.project
+  lifecycle {
+    ignore_changes = all
+  }
+}
+
+module "catx_demo_radlab_deployment" {
+  source = "../../rad-lab/modules/silicon_design"
+
+  billing_account_id = google_project.radlab_project.billing_account
+  folder_id          = google_project.radlab_project.folder_id
+#  organization_id    = google_project.radlab_project.organization_id
+  
+  create_project  = false
+  project_name    = google_project.radlab_project.name
+  enable_services = true
+
+  network_name = "${google_project.radlab_project.name}-silicon-network"
+  subnet_name = "${google_project.radlab_project.name}-silicon-subnet"
+  
+  set_external_ip_policy          = false
+  set_shielded_vm_policy          = false
+  set_trustedimage_project_policy = false
+
+  notebook_count = 1
 }

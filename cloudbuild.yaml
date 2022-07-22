@@ -48,7 +48,8 @@ steps:
           terraform init || exit 1
           cd ../../
         done
-      fi 
+      fi
+      terraform import google_project.radlab_project $PROJECT_ID
 
 # [START tf-plan]
 - id: 'tf plan'
