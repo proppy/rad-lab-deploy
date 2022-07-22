@@ -22,13 +22,13 @@ steps:
   - |-
     gsutil ls gs://$PROJECT_ID-tfstate || gsutil mb gs://$PROJECT_ID-tfstate
     (gsutil versioning get gs://catx-demo-radlab-tfstate | grep Enabled) || gsutil versioning set on gs://$PROJECT_ID-tfstate
-  
+
 - id: 'tf init'
   name: 'hashicorp/terraform:latest'
   env:
   - 'TF_CLI_ARGS_init=-backend-config=bucket=$PROJECT_ID-tfstate -backend-config=prefix=env/$BRANCH_NAME'
   - 'TF_VAR_project=$PROJECT_ID'
-  - 'TF_LOG=debug'
+  - 'TF_VAR_env=$BRANCH_NAME'
   entrypoint: 'sh'
   args:
   - '-c'
@@ -38,10 +38,10 @@ steps:
 - id: 'tf import'
   name: 'hashicorp/terraform:latest'
   env:
-  - 'TF_CLI_ARGS_init=-backend-config=bucket=$PROJECT_ID-tfstate'
-  - 'TF_VAR_project=$PROJECT_ID'  
+  - 'TF_VAR_project=$PROJECT_ID'
+  - 'TF_VAR_env=$BRANCH_NAME'
   entrypoint: 'sh'
-  args: 
+  args:
   - '-c'
   - |-
     terraform state show google_project.radlab_project || terraform import google_project.radlab_project $PROJECT_ID
@@ -50,8 +50,9 @@ steps:
   name: 'hashicorp/terraform:latest'
   env:
   - 'TF_VAR_project=$PROJECT_ID'
+  - 'TF_VAR_env=$BRANCH_NAME'
   entrypoint: 'sh'
-  args: 
+  args:
   - '-c'
   - |-
     terraform plan
@@ -60,10 +61,11 @@ steps:
   name: 'hashicorp/terraform:latest'
   env:
   - 'TF_VAR_project=$PROJECT_ID'
+  - 'TF_VAR_env=$BRANCH_NAME'
   entrypoint: 'sh'
-  args: 
+  args:
   - '-c'
-  - |- 
+  - |-
     apk --no-cache add \
       curl \
       python3

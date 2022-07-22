@@ -26,8 +26,8 @@ resource "google_project" "radlab_project" {
 }
 
 module "catx_demo_radlab_deployment" {
-  source = "git::https://github.com/proppy/rad-lab.git//modules/silicon_design?ref=prefix"
-  name   = "${var.project}-deploy"
+  source = "git::https://github.com/proppy/rad-lab.git//modules/silicon_design?ref=${var.env}"
+  name   = "${var.project}-${var.env}"
   
   folder_id          = google_project.radlab_project.folder_id
   project_name       = google_project.radlab_project.name
