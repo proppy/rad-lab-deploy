@@ -6,7 +6,6 @@ This is the repo for the [Managing infrastructure as code with Terraform, Cloud 
 PROJECT_ID=$(gcloud config get-value project)
 gsutil mb gs://${PROJECT_ID}-tfstate
 gsutil versioning set on gs://${PROJECT_ID}-tfstate
-/environments/main
 terraform init
 terraform import google_project.radlab_project ${PROJECT_ID}
 terraform plan

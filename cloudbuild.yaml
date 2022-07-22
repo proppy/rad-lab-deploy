@@ -14,18 +14,6 @@
 
 
 steps:
-- name: gcr.io/cloud-builders/git
-  args: ['submodule', 'update', '--init', '--recursive']
-- id: 'branch name'
-  name: 'alpine'
-  entrypoint: 'sh'  
-  args: 
-  - '-c'
-  - | 
-      echo "***********************"
-      echo "$BRANCH_NAME"
-      echo "***********************"
-
 - id: 'tf init'
   name: 'hashicorp/terraform:latest'
   env:
@@ -38,26 +26,9 @@ steps:
   - |
       set -ex
       env
-      if [ -d "environments/$BRANCH_NAME/" ]; then
-        cd environments/$BRANCH_NAME
-        terraform init
-      else
-        for dir in environments/*/
-        do 
-          cd ${dir}   
-          env=${dir%*/}
-          env=${env#*/}
-          echo ""
-          echo "*************** TERRAFORM INIT ******************"
-          echo "******* At environment: ${env} ********"
-          echo "*************************************************"
-          terraform init || exit 1
-          cd ../../
-        done
-      fi
+      terraform init
       terraform state show google_project.radlab_project || terraform import google_project.radlab_project $PROJECT_ID
 
-# [START tf-plan]
 - id: 'tf plan'
   name: 'hashicorp/terraform:latest'
   env:
@@ -69,26 +40,8 @@ steps:
   - |
       set -ex
       env
-      if [ -d "environments/$BRANCH_NAME/" ]; then
-        cd environments/$BRANCH_NAME
-        terraform plan
-      else
-        for dir in environments/*/
-        do 
-          cd ${dir}   
-          env=${dir%*/}
-          env=${env#*/}  
-          echo ""
-          echo "*************** TERRAFORM PLAN ******************"
-          echo "******* At environment: ${env} ********"
-          echo "*************************************************"
-          terraform plan || exit 1
-          cd ../../
-        done
-      fi 
-# [END tf-plan]
+      terraform plan
 
-# [START tf-apply]
 - id: 'tf apply'
   name: 'hashicorp/terraform:latest'
   env:
@@ -100,12 +53,4 @@ steps:
   - | 
       set -ex
       env
-      if [ -d "environments/$BRANCH_NAME/" ]; then
-        cd environments/$BRANCH_NAME      
-        terraform apply -auto-approve
-      else
-        echo "***************************** SKIPPING APPLYING *******************************"
-        echo "Branch '$BRANCH_NAME' does not represent an oficial environment."
-        echo "*******************************************************************************"
-      fi
-# [END tf-apply]      
+      terraform apply -auto-approve
