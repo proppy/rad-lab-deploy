@@ -35,6 +35,8 @@ steps:
   args: 
   - '-c'
   - |
+      set -ex
+      env
       if [ -d "environments/$BRANCH_NAME/" ]; then
         cd environments/$BRANCH_NAME
         terraform init
@@ -63,6 +65,8 @@ steps:
   args: 
   - '-c'
   - |
+      set -ex
+      env
       if [ -d "environments/$BRANCH_NAME/" ]; then
         cd environments/$BRANCH_NAME
         terraform plan
@@ -91,6 +95,8 @@ steps:
   args: 
   - '-c'
   - | 
+      set -ex
+      env
       if [ -d "environments/$BRANCH_NAME/" ]; then
         cd environments/$BRANCH_NAME      
         terraform apply -auto-approve
