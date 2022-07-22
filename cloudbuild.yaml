@@ -33,6 +33,11 @@ steps:
   args:
   - '-c'
   - |-
+    cat > override.tf <<EOF
+    module "radlab_silicon_deploy" {
+      source = "git::https://github.com/proppy/rad-lab.git//modules/silicon_design?ref=$BRANCH_NAME"
+    }
+    EOF
     terraform init
 
 - id: 'tf import'
