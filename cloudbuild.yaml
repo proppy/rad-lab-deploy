@@ -29,8 +29,9 @@ steps:
 - id: 'tf init'
   name: 'hashicorp/terraform:latest'
   env:
-  - 'TF_CLI_ARGS="-backend-config=bucket=$PROJECT_ID-tfstate -backend-config=prefix=env/main"'
+  - 'TF_CLI_ARGS_init="-backend-config=bucket=$PROJECT_ID-tfstate -backend-config=prefix=env/main"'
   - 'TF_VAR_project=$PROJECT_ID'  
+  - 'TF_LOG=debug'
   entrypoint: 'sh'
   args: 
   - '-c'
@@ -61,6 +62,7 @@ steps:
   name: 'hashicorp/terraform:latest'
   env:
   - 'TF_VAR_project=$PROJECT_ID'
+  - 'TF_LOG=debug'
   entrypoint: 'sh'
   args: 
   - '-c'
@@ -91,6 +93,7 @@ steps:
   name: 'hashicorp/terraform:latest'
   env:
   - 'TF_VAR_project=$PROJECT_ID'
+  - 'TF_LOG=debug'
   entrypoint: 'sh'
   args: 
   - '-c'
