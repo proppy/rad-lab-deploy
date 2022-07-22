@@ -15,6 +15,5 @@
 
 terraform {
   backend "gcs" {
-    prefix = "env/main"
   }
 }
