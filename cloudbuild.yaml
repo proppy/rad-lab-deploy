@@ -68,7 +68,7 @@ steps:
           echo "*************** TERRAFORM PLAN ******************"
           echo "******* At environment: ${env} ********"
           echo "*************************************************"
-          terraform plan || exit 1
+          terraform plan -var="project=$PROJECT_ID" || exit 1
           cd ../../
         done
       fi 
@@ -83,7 +83,7 @@ steps:
   - | 
       if [ -d "environments/$BRANCH_NAME/" ]; then
         cd environments/$BRANCH_NAME      
-        terraform apply -auto-approve
+        terraform apply -auto-approve -var="project=$PROJECT_ID"
       else
         echo "***************************** SKIPPING APPLYING *******************************"
         echo "Branch '$BRANCH_NAME' does not represent an oficial environment."
