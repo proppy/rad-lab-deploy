@@ -26,6 +26,8 @@ steps:
 
 - id: 'tf init'
   name: 'hashicorp/terraform:1.0.0'
+  - 'TF_CLI_ARGS="-backend-config=bucket=$PROJECT_ID-tfstate -backend-config=prefix=env/main"'
+  - 'TF_VAR_project=$PROJECT_ID'  
   entrypoint: 'sh'
   args: 
   - '-c'
@@ -80,7 +82,7 @@ steps:
 - id: 'tf apply'
   name: 'hashicorp/terraform:1.0.0'
   env:
-  - 'TF_VAR_project=$PROJECT_ID'  
+  - 'TF_VAR_project=$PROJECT_ID'
   entrypoint: 'sh'
   args: 
   - '-c'
