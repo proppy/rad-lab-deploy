@@ -55,7 +55,7 @@ steps:
           cd ../../
         done
       fi
-      terraform import google_project.radlab_project $PROJECT_ID
+      terraform state show google_project.radlab_project || terraform import google_project.radlab_project $PROJECT_ID
 
 # [START tf-plan]
 - id: 'tf plan'
