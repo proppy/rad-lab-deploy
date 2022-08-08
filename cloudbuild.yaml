@@ -21,7 +21,7 @@ steps:
   - '-c'
   - |-
     gsutil ls gs://$PROJECT_ID-tfstate || gsutil mb gs://$PROJECT_ID-tfstate
-    (gsutil versioning get gs://catx-demo-radlab-tfstate | grep Enabled) || gsutil versioning set on gs://$PROJECT_ID-tfstate
+    (gsutil versioning get gs://$PROJECT_ID-tfstate | grep Enabled) || gsutil versioning set on gs://$PROJECT_ID-tfstate
 
 - id: 'tf init'
   name: 'hashicorp/terraform:latest'
