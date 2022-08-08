@@ -26,7 +26,7 @@ resource "google_project" "radlab_project" {
 }
 
 module "radlab_silicon_deploy" {
-  source = "./modules/silicon_design"
+  source = "./rad-lab/modules/silicon_design"
   name   = "radlab-silicon-${var.env}"
   
   folder_id          = google_project.radlab_project.folder_id
