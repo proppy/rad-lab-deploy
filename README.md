@@ -4,7 +4,8 @@
 
 - [bootstrap](bootstrap/) project
 - `gcloud init && git config credential.helper gcloud.sh`
-- `git push https://source.developers.google.com/p/$PROJECT_ID/r/rad-lab-deploy`
+- `git remote add $PROJECT_ID https://source.developers.google.com/p/$PROJECT_ID/r/rad-lab-deploy`
+- `git push $PROJECT_ID`
 
 ## update with latest rad-lab changes
 
