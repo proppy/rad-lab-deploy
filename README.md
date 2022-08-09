@@ -1,14 +1,13 @@
-# Managing infrastructure as code with Terraform, Cloud Build, and GitOps
+# rad-lab-deploy
 
-This is the repo for the [Managing infrastructure as code with Terraform, Cloud Build, and GitOps](https://cloud.google.com/solutions/managing-infrastructure-as-code) tutorial. This tutorial explains how to manage infrastructure as code with Terraform and Cloud Build using the popular GitOps methodology. 
+## first deploy
 
-```bash
-PROJECT_ID=$(gcloud config get-value project)
-gsutil mb gs://${PROJECT_ID}-tfstate
-gsutil versioning set on gs://${PROJECT_ID}-tfstate
-terraform init
-terraform import google_project.radlab_project ${PROJECT_ID}
-terraform plan
-terraform apply
-terraform destroy
-```
+- [bootstrap](bootstrap/) project
+- `gcloud init && git config credential.helper gcloud.sh`
+- `git push https://source.developers.google.com/p/$PROJECT_ID/r/rad-lab-deploy`
+
+## update with latest rad-lab changes
+
+- `git remote add rad-lab https://github.com/proppy/rad-lab.git`
+- `git subtree -P rad-lab pull rad-lab tuning --squash`
+- `git push https://source.developers.google.com/p/$PROJECT_ID/r/rad-lab-deploy`
