@@ -40,4 +40,7 @@ module "radlab_silicon_deploy" {
   set_trustedimage_project_policy = false
 
   notebook_count = 1
+  notebook_names = [
+    "radlab-silicon-demo-${var.env}",
+  ]
 }
