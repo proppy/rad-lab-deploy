@@ -28,6 +28,10 @@ locals {
   ]
 }
 
+data "google_project" "project" {
+  project_id = var.project
+}
+
 resource "google_project_service" "enable_source_repo" {
   project                    = var.project
   service                    = "sourcerepo.googleapis.com"
@@ -41,7 +45,7 @@ resource "google_project_service" "enable_source_repo" {
 
 resource "google_sourcerepo_repository" "rad_lab_deploy_repo" {
   name = "rad-lab-deploy"
-  project = var.project
+  project = data.google_project.project.name 
 
   depends_on = [
     google_project_service.enable_source_repo
