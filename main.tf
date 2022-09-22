@@ -38,6 +38,7 @@ module "radlab_silicon_deploy" {
   set_external_ip_policy          = false
   set_shielded_vm_policy          = false
   set_trustedimage_project_policy = false
+  image_tag			  = "latest"
 
   notebook_count = 1
   notebook_names = [
