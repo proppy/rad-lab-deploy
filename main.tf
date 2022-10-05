@@ -38,7 +38,8 @@ module "radlab_silicon_deploy" {
   set_external_ip_policy          = false
   set_shielded_vm_policy          = false
   set_trustedimage_project_policy = false
-  image_tag			  = "202208120815"
+  machine_type			  = "n2-standard-32"
+  image_tag			  = "latest"
 
   notebook_count = 1
   notebook_names = [
