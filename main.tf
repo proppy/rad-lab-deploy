@@ -29,7 +29,7 @@ module "radlab_silicon_deploy" {
   name   = "radlab-silicon-${var.env}"
   
   folder_id          = google_project.radlab_project.folder_id
-  project_name       = google_project.radlab_project.name
+  project_id_prefix  = google_project.radlab_project.name
   billing_account_id = google_project.radlab_project.billing_account
 
   create_project                  = false
