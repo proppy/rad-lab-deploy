@@ -23,6 +23,15 @@ steps:
     gsutil ls gs://$PROJECT_ID-tfstate || gsutil mb gs://$PROJECT_ID-tfstate
     (gsutil versioning get gs://$PROJECT_ID-tfstate | grep Enabled) || gsutil versioning set on gs://$PROJECT_ID-tfstate
 
+- id: 'get machine type'
+  name: 'gcr.io/cloud-builders/gcloud'
+  entrypoint: 'bash'
+  args:
+    - '-c'
+    - |-
+      apt -qqy update && apt -qqy install jq
+      (gcloud --format=json compute project-info describe | jq -e -r '.commonInstanceMetadata.items[] | select(.key == "radlab-machine-type") | .value' || printf "n2-standard-32") > /workspace/radlab_machine_type
+
 - id: 'tf init'
   name: 'hashicorp/terraform:latest'
   env:
@@ -55,6 +64,7 @@ steps:
   args:
   - '-c'
   - |-
+    export TF_VAR_machine_type=$(cat /workspace/radlab_machine_type)
     terraform plan
 
 - id: 'tf apply'
@@ -75,4 +85,5 @@ steps:
     gcloud config set core/disable_usage_reporting true
     gcloud config set component_manager/disable_update_check true
     gcloud --version
+    export TF_VAR_machine_type=$(cat /workspace/radlab_machine_type)
     terraform apply -auto-approve

@@ -15,3 +15,7 @@
 
 variable "project" {}
 variable "env" {}
+variable "machine_type" {
+  type    = string
+  default = "n2-standard-32"
+}
