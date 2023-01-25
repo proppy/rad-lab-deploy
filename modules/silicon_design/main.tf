@@ -69,7 +69,7 @@ locals {
     "cloudbuild.googleapis.com",
     "artifactregistry.googleapis.com",
     "aiplatform.googleapis.com",
-  ] : []
+  ]
 
   project_services = var.enable_services ? (var.billing_budget_pubsub_topic ? distinct(concat(local.default_apis,["pubsub.googleapis.com"])) : local.default_apis) : []
 
@@ -305,15 +305,6 @@ resource "google_notebooks_instance" "ai_notebook" {
   ]
 }
 
-resource "null_resource" "ai_notebook_provisioning_state" {
-  for_each = toset(google_notebooks_instance.ai_notebook[*].name)
-  provisioner "local-exec" {
-    command = "while [ \"$(gcloud notebooks instances list ${local.gcloud_impersonate_flag} --location ${var.zone} --project ${local.project.project_id} --verbosity=error --filter 'NAME:${each.value} AND STATE:ACTIVE' --format 'value(STATE)' | wc -l | xargs)\" != 1 ]; do echo \"${each.value} not active yet.\"; done"
-  }
-
-  depends_on = [google_notebooks_instance.ai_notebook]
-}
-
 resource "google_artifact_registry_repository" "containers_repo" {
   provider = google-beta
 
@@ -348,12 +339,12 @@ resource "null_resource" "build_and_push_image" {
     env_sha             = filesha1("${path.module}/scripts/build/images/provision/install.tcl")
     profile_sha         = filesha1("${path.module}/scripts/build/images/provision/profile.sh")
     papermill_sha       = filesha1("${path.module}/scripts/build/images/provision/papermill-launcher")
-    notebook_sha        = filesha1("${path.module}/scripts/build/notebooks/examples/digital/inverter.md")
+    notebook_sha        = sha1(join("", [for f in fileset(path.cwd, "scripts/build/notebooks/**/*"): filesha1(f)]))
   }
 
   provisioner "local-exec" {
     working_dir = path.module
-    command     = "gcloud ${local.gcloud_impersonate_flag} --project=${local.project.project_id} builds submit . --config ${path.module}/scripts/build/cloudbuild.yaml --substitutions \"_ZONE=${var.zone},_COMPUTE_IMAGE=${var.image_name},_CONTAINER_IMAGE=${google_artifact_registry_repository.containers_repo.location}-docker.pkg.dev/${local.project.project_id}/${google_artifact_registry_repository.containers_repo.repository_id}/${var.image_name},_STAGING_BUCKET=${google_storage_bucket.staging_bucket.name},_COMPUTE_NETWORK=${local.network.id},_COMPUTE_SUBNET=${local.subnet.id}},_IMAGE_TAG=${local.image_tag},_CLOUD_BUILD_SA=${google_service_account.sa_image_builder_identity.email}\""
+    command     = "gcloud ${local.gcloud_impersonate_flag} --project=${local.project.project_id} builds submit . --config ./scripts/build/cloudbuild.yaml --substitutions \"_ZONE=${var.zone},_COMPUTE_IMAGE=${var.image_name},_CONTAINER_IMAGE=${google_artifact_registry_repository.containers_repo.location}-docker.pkg.dev/${local.project.project_id}/${google_artifact_registry_repository.containers_repo.repository_id}/${var.image_name},_STAGING_BUCKET=${google_storage_bucket.staging_bucket.name},_COMPUTE_NETWORK=${local.network.id},_COMPUTE_SUBNET=${local.subnet.id},_IMAGE_TAG=${local.image_tag},_CLOUD_BUILD_SA=${google_service_account.sa_image_builder_identity.email}\""
   }
 
   depends_on = [
@@ -363,5 +354,6 @@ resource "null_resource" "build_and_push_image" {
     google_project_iam_member.sa_image_builder_permissions,
     google_project_iam_member.sa_cloudbuild_permissions,
     google_service_account_iam_member.sa_cloudbuild_image_builder_access,
+    module.vpc_ai_notebook,
   ]
 }

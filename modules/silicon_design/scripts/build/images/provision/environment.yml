@@ -16,29 +16,20 @@ channels:
   - litex-hub
   - conda-forge
 dependencies:
+  - openlane
   - open_pdks.sky130a
-  - magic
-  # workaround https://github.com/The-OpenROAD-Project/OpenLane/issues/1387
-  - openroad=2.0_4941_gdc11f5970
-  # workaround https://github.com/The-OpenROAD-Project/OpenLane/issues/1380
-  - netgen=1.5.229_0_g153ce0e
-  - yosys
-  - gdstk
-  - cairosvg
-  - svgutils
-  - tcllib
   - iverilog
   - xls
+  - cairosvg
+  - svgutils
   - pyspice
-  - pyyaml
-  - click
   - gdsfactory
-  - pandas
   - pymeep=*=mpi_mpich_*
   - jupyterlab
   - python
   - pip
   - pip:
+    - gdstk
     - klayout
     - scrapbook[gcs]
     - google-cloud-aiplatform
