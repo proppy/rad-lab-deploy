@@ -36,7 +36,11 @@ fi
 
 echo "DaisyStatus: installing conda-eda environment"
 curl -Ls https://micro.mamba.pm/api/micromamba/linux-64/latest | tar -C /usr/local -xvj bin/micromamba
-micromamba create --yes -r /opt/conda -n silicon --file ${PROVISION_DIR}/environment.yml
+micromamba create --strict-channel-priority --yes -r /opt/conda -n silicon
+micromamba install -r /opt/conda -n silicon -c litex-hub -c main openlane open_pdks.sky130a xls klayout iverilog ngspice
+micromamba install -r /opt/conda -n silicon -c main jupyterlab python pip conda
+micromamba install -r /opt/conda -n silicon -c conda-forge pymeep=*=mpi_mpich_*
+/opt/conda/envs/silicon/bin/python -m pip install gdstk cairosvg klayout scrapbook[gcs] google-cloud-aiplatform cloudml-hypertune gdsfactory[full] pyspice
 
 echo "DaisyStatus: installing OpenROAD Flow"
 git clone --depth 1 -b ${OPENROAD_FLOW_VERSION} https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts /OpenROAD-flow-scripts

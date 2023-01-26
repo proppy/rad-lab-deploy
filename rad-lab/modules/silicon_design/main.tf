@@ -335,7 +335,6 @@ resource "null_resource" "build_and_push_image" {
     workflow_sha        = filesha1("${path.module}/scripts/build/images/compute_image.wf.json")
     dockerfile_sha      = filesha1("${path.module}/scripts/build/images/Dockerfile")
     provision_sha       = filesha1("${path.module}/scripts/build/images/provision.sh")
-    environment_sha     = filesha1("${path.module}/scripts/build/images/provision/environment.yml")
     profile_sha         = filesha1("${path.module}/scripts/build/images/provision/profile.sh")
     papermill_sha       = filesha1("${path.module}/scripts/build/images/provision/papermill-launcher")
     notebook_sha        = sha1(join("", [for f in fileset(path.cwd, "scripts/build/notebooks/**/*"): filesha1(f)]))
